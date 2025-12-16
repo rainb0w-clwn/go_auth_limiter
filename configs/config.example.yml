@@ -1,0 +1,28 @@
+# <value> - means default value
+log:
+  level: "debug" # <debug>|info|warn|error
+http:
+  host: "0.0.0.0"
+  port: 8888
+  readTimeout: 3s # <3s>
+  writeTimeout: 3s # <3s>
+  idleTimeout: 30s # <30s>
+  readHeaderTimeout: 2s # <2s>
+grpc:
+  host: "0.0.0.0"
+  port: 50051
+  connectTimeout: 3s # <3s>
+db:
+  type: postgres
+  dsn: "postgres://postgres:postgres@0.0.0.0:5432/go_auth_limiter?sslmode=disable"
+  migrationsDir: "./migrations/" # <./migrations/>
+  autoMigrate: false # <false>
+  connectTimeout: "10s" # <10s>
+app:
+  refillRate:
+    count: 3
+    time: 30s
+  garbageCollector:
+    enabled: true
+    ttl: 600s
+    interval: 60s

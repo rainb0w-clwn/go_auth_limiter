@@ -1,0 +1,46 @@
+services:
+  app:
+    container_name: auth_limiter
+    build:
+      context: ../
+      dockerfile: ./build/limiter/Dockerfile
+    restart: always
+    environment:
+      HTTP_HOST: 0.0.0.0
+      HTTP_PORT: 8888
+      GRPC_HOST: 0.0.0.0
+      GRPC_PORT: 50051
+      DB_DSN: "postgres://postgres:postgres@db:5432/auth_limiter"
+      DB_MIGRATIONS_DIR: "/app/migrations"
+      DB_AUTO_MIGRATE: true
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "8888:8888"
+      - "50051:50051"
+  db:
+    image: postgres
+    container_name: auth_limiter-db
+    restart: always
+    environment:
+      POSTGRES_DB: auth_limiter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d auth_limiter" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_limiter-data:/var/lib/postgresql/data
+volumes:
+  auth_limiter-data:

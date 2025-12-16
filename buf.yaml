@@ -1,0 +1,16 @@
+version: v1
+
+deps:
+  - buf.build/meshapi/grpc-api-gateway
+  - buf.build/bufbuild/protovalidate
+
+lint:
+  use:
+    - DEFAULT
+  except:
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - PACKAGE_DIRECTORY_MATCH
+
+breaking:
+  use:
+    - FILE

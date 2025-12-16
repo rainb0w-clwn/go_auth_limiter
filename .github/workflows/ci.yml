@@ -1,0 +1,57 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  GOLANG_VERSION: ^1.25
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GOLANG_VERSION }}
+
+      - name: make lint
+        run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GOLANG_VERSION }}
+
+      - name: Unit test
+        run: make test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GOLANG_VERSION }}
+
+      - name: Build bin
+        run: make build
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: limiter
+          path: bin/limiter

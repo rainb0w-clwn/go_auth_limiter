@@ -1,0 +1,268 @@
+openapi: 3.1.0
+info:
+  title: Auth Limiter API
+  description: Authentication rate limiter and abuse protection service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8888
+    description: Local
+paths:
+  /blacklist:
+    post:
+      tags:
+        - Blacklist
+      summary: Add IP network to blacklist
+      operationId: AuthLimiter_BlackListAdd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlackListAddRequest'
+        required: true
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlackListAddResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+    delete:
+      tags:
+        - Blacklist
+      summary: Remove IP network from blacklist
+      operationId: AuthLimiter_BlackListDelete
+      parameters:
+        - name: ipNet
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlackListDeleteResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+  /check:
+    post:
+      tags:
+        - Limiter
+      summary: Check whether authentication attempt is allowed
+      operationId: AuthLimiter_LimitCheck
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LimitCheckRequest'
+        required: true
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LimitCheckResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+  /reset:
+    post:
+      tags:
+        - Limiter
+      summary: Reset rate limit bucket
+      operationId: AuthLimiter_BucketReset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BucketResetRequest'
+        required: true
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BucketResetResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+  /whitelist:
+    post:
+      tags:
+        - Whitelist
+      summary: Add IP network to whitelist
+      operationId: AuthLimiter_WhiteListAdd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhiteListAddRequest'
+        required: true
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhiteListAddResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+    delete:
+      tags:
+        - Whitelist
+      summary: Remove IP network from whitelist
+      operationId: AuthLimiter_WhiteListDelete
+      parameters:
+        - name: ipNet
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: a successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhiteListDeleteResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+components:
+  schemas:
+    Any:
+      type: object
+      description: Any contains an arbitrary schema along with a URL to help identify the type of the schema.
+      properties:
+        '@type':
+          type: string
+          description: A URL/resource name that uniquely identifies the type of the schema.
+    BlackListAddRequest:
+      title: BlackListAddRequest
+      required:
+        - ip_net
+      type: object
+      properties:
+        ipNet:
+          type: string
+    BlackListAddResponse:
+      title: BlackListAddResponse
+      type: object
+    BlackListDeleteRequest:
+      title: BlackListDeleteRequest
+      required:
+        - ip_net
+      type: object
+      properties:
+        ipNet:
+          type: string
+    BlackListDeleteResponse:
+      title: BlackListDeleteResponse
+      type: object
+    BucketResetRequest:
+      title: BucketResetRequest
+      required:
+        - ip
+        - login
+      type: object
+      properties:
+        ip:
+          type: string
+          format: ipv4
+        login:
+          maxLength: 128
+          minLength: 1
+          type: string
+    BucketResetResponse:
+      title: BucketResetResponse
+      type: object
+    LimitCheckRequest:
+      title: LimitCheckRequest
+      required:
+        - ip
+        - login
+        - password
+      type: object
+      properties:
+        ip:
+          type: string
+          format: ipv4
+        login:
+          maxLength: 128
+          minLength: 1
+          type: string
+        password:
+          maxLength: 256
+          minLength: 1
+          type: string
+    LimitCheckResponse:
+      title: LimitCheckResponse
+      type: object
+      properties:
+        allowed:
+          type: boolean
+    Status:
+      title: Status
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Any'
+        message:
+          type: string
+    WhiteListAddRequest:
+      title: WhiteListAddRequest
+      required:
+        - ip_net
+      type: object
+      properties:
+        ipNet:
+          type: string
+    WhiteListAddResponse:
+      title: WhiteListAddResponse
+      type: object
+    WhiteListDeleteRequest:
+      title: WhiteListDeleteRequest
+      required:
+        - ip_net
+      type: object
+      properties:
+        ipNet:
+          type: string
+    WhiteListDeleteResponse:
+      title: WhiteListDeleteResponse
+      type: object
+tags:
+  - name: Whitelist
+  - name: Blacklist
+  - name: Limiter
+  - name: AuthLimiter

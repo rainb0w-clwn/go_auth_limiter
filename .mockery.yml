@@ -1,0 +1,23 @@
+all: false
+dir: '{{.InterfaceDir}}/mocks/'
+filename: 'mock_{{.InterfaceName}}.go'
+force-file-write: true
+formatter: goimports
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.SrcPackageName}}'
+recursive: false
+template: testify
+template-data:
+  unroll-variadic: true
+packages:
+  github.com/rainb0w-clwn/go_auth_limiter/internal/interfaces:
+    interfaces:
+      Application: { }
+      Logger: { }
+  github.com/rainb0w-clwn/go_auth_limiter/internal/limiter:
+    interfaces:
+      IStorage: {}
+  github.com/rainb0w-clwn/go_auth_limiter/internal/rule:
+    interfaces:
+      IStorage: {}

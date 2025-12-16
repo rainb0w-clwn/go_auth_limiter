@@ -1,0 +1,208 @@
+syntax = "proto3";
+
+package AuthLimiter;
+
+option go_package = "github.com/rainb0w-clwn/go_auth_limiter/proto";
+
+import "meshapi/gateway/annotations.proto";
+import "buf/validate/validate.proto";
+
+///////////////////////////////////////////////////////////
+// OpenAPI v3 document
+///////////////////////////////////////////////////////////
+option (meshapi.gateway.openapi_doc) = {
+  info: {
+    title: "Auth Limiter API"
+    version: "1.0.0"
+    description: "Authentication rate limiter and abuse protection service"
+  }
+  servers: [
+    { url: "http://localhost:8888", description: "Local" }
+  ]
+  tags: [
+    { name: "Whitelist" },
+    { name: "Blacklist" },
+    { name: "Limiter" }
+  ]
+};
+
+///////////////////////////////////////////////////////////
+// Service
+//////////////////////////////////////////////////////////
+service AuthLimiter {
+  rpc WhiteListAdd(WhiteListAddRequest) returns (WhiteListAddResponse) {
+    option (meshapi.gateway.http) = {
+      post: "/whitelist"
+      body: "*"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Add IP network to whitelist"
+      tags: ["Whitelist"]
+    };
+  };
+  rpc WhiteListDelete(WhiteListDeleteRequest) returns (WhiteListDeleteResponse) {
+    option (meshapi.gateway.http) = {
+      delete: "/whitelist"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Remove IP network from whitelist"
+      tags: ["Whitelist"]
+    };
+  };
+
+  rpc BlackListAdd(BlackListAddRequest) returns (BlackListAddResponse) {
+    option (meshapi.gateway.http) = {
+      post: "/blacklist"
+      body: "*"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Add IP network to blacklist"
+      tags: ["Blacklist"]
+    };
+  };
+  rpc BlackListDelete(BlackListDeleteRequest) returns (BlackListDeleteResponse) {
+    option (meshapi.gateway.http) = {
+      delete: "/blacklist"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Remove IP network from blacklist"
+      tags: ["Blacklist"]
+    };
+  };
+
+  rpc BucketReset(BucketResetRequest) returns (BucketResetResponse) {
+    option (meshapi.gateway.http) = {
+      post: "/reset"
+      body: "*"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Reset rate limit bucket"
+      tags: ["Limiter"]
+    };
+  };
+
+  rpc LimitCheck(LimitCheckRequest) returns (LimitCheckResponse) {
+    option (meshapi.gateway.http) = {
+      post: "/check"
+      body: "*"
+    };
+    option (meshapi.gateway.openapi_operation) = {
+      summary: "Check whether authentication attempt is allowed"
+      tags: ["Limiter"]
+    };
+  };
+}
+
+///////////////////////////////////////////////////////////
+// Requests (validated)
+///////////////////////////////////////////////////////////
+
+message WhiteListAddRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'ip_net',
+  };
+
+  string ip_net = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.pattern =
+        "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$"
+  ];
+}
+
+message WhiteListDeleteRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'ip_net',
+  };
+
+  string ip_net = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.pattern =
+        "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$"
+  ];}
+
+message BlackListAddRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'ip_net',
+  };
+
+  string ip_net = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.pattern =
+        "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$"
+  ];}
+
+message BlackListDeleteRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'ip_net',
+  };
+
+  string ip_net = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.pattern =
+        "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$"
+  ];}
+
+message BucketResetRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'login',
+    required: 'ip',
+  };
+
+  string login = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 128,
+    (meshapi.gateway.openapi_field).min_length = 1,
+    (meshapi.gateway.openapi_field).max_length = 128
+  ];
+
+  string ip = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.ip = true,
+    (meshapi.gateway.openapi_field).format = 'ipv4'
+  ];
+}
+
+message LimitCheckRequest {
+  option (meshapi.gateway.openapi_schema) = {
+    required: 'login',
+    required: 'password',
+    required: 'ip',
+  };
+
+  string login = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 128,
+    (meshapi.gateway.openapi_field).min_length = 1,
+    (meshapi.gateway.openapi_field).max_length = 128
+  ];
+
+  string password = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 256,
+    (meshapi.gateway.openapi_field).min_length = 1,
+    (meshapi.gateway.openapi_field).max_length = 256
+  ];
+
+  string ip = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.ip = true,
+    (meshapi.gateway.openapi_field).format = 'ipv4'
+  ];
+}
+
+///////////////////////////////////////////////////////////
+// Responses
+///////////////////////////////////////////////////////////
+
+message WhiteListAddResponse {}
+message WhiteListDeleteResponse {}
+message BlackListAddResponse {}
+message BlackListDeleteResponse {}
+message BucketResetResponse {}
+
+message LimitCheckResponse {
+  bool allowed = 1;
+}
