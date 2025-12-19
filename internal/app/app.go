@@ -19,11 +19,11 @@ type App struct {
 	rule    rule.IService
 	limiter limiter.IService
 
-	logger interfaces.Logger
+	logger appinterfaces.Logger
 	config *config.Config
 }
 
-func New(ctx context.Context, config *config.Config, logger interfaces.Logger) (interfaces.Application, error) {
+func New(ctx context.Context, config *config.Config, logger appinterfaces.Logger) (appinterfaces.Application, error) {
 	postgresStorage := postgres.New()
 
 	if err := postgresStorage.Connect(ctx); err != nil {

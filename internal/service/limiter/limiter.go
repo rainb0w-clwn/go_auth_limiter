@@ -14,12 +14,12 @@ import (
 
 type Limiter struct {
 	server *server.Server
-	logger interfaces.Logger
+	logger appinterfaces.Logger
 }
 
 func New(
 	server *server.Server,
-	logger interfaces.Logger,
+	logger appinterfaces.Logger,
 ) *Limiter {
 	return &Limiter{
 		server: server,

@@ -23,7 +23,7 @@ type SLogger struct {
 	Level  Level
 }
 
-func New(level Level, writer io.Writer) interfaces.Logger {
+func New(level Level, writer io.Writer) appinterfaces.Logger {
 	return &SLogger{
 		Level: level,
 		logger: slog.New(slog.NewJSONHandler(writer, &slog.HandlerOptions{

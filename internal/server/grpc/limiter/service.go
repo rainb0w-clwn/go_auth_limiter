@@ -15,11 +15,11 @@ import (
 
 type Service struct {
 	proto.UnimplementedAuthLimiterServer
-	app    interfaces.Application
-	logger interfaces.Logger
+	app    appinterfaces.Application
+	logger appinterfaces.Logger
 }
 
-func NewService(app interfaces.Application, logger interfaces.Logger) *Service {
+func NewService(app appinterfaces.Application, logger appinterfaces.Logger) *Service {
 	return &Service{
 		app:    app,
 		logger: logger,

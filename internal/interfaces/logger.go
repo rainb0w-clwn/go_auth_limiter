@@ -1,4 +1,4 @@
-package interfaces //nolint:revive
+package appinterfaces
 
 type Logger interface {
 	Debug(string, ...interface{})

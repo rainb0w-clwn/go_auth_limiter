@@ -14,11 +14,11 @@ type Options struct {
 type Server struct {
 	GRPC    *serverGRPC.Server
 	HTTP    *serverHTTP.Server
-	logger  interfaces.Logger
+	logger  appinterfaces.Logger
 	options Options
 }
 
-func New(options Options, logger interfaces.Logger, app interfaces.Application) *Server {
+func New(options Options, logger appinterfaces.Logger, app appinterfaces.Application) *Server {
 	grpcServer := serverGRPC.New(
 		options.GRPC,
 		logger,

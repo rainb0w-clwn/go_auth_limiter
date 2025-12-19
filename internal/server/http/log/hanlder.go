@@ -11,7 +11,7 @@ import (
 
 const XRequestIDKey = "X-Request-Id"
 
-func New(logger interfaces.Logger, next http.Handler) http.HandlerFunc {
+func New(logger appinterfaces.Logger, next http.Handler) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/health" {
 			return

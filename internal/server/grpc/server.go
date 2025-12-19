@@ -27,10 +27,10 @@ type Server interface {
 
 type server struct {
 	*grpc.Server
-	logger interfaces.Logger
+	logger appinterfaces.Logger
 }
 
-func New(options Options, logger interfaces.Logger, app interfaces.Application) Server {
+func New(options Options, logger appinterfaces.Logger, app appinterfaces.Application) Server {
 	serverGRPC := grpc.NewServer(
 		grpc.ConnectionTimeout(options.ConnectTimeout),
 		grpc.ChainUnaryInterceptor(

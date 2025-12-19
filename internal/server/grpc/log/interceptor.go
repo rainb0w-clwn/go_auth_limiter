@@ -19,7 +19,7 @@ const XRequestIDKey = "x-request-id"
 
 const unknown = "UNKNOWN"
 
-func New(logger interfaces.Logger) grpc.UnaryServerInterceptor {
+func New(logger appinterfaces.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		start := time.Now()
 		resp, err := handler(ctx, req)

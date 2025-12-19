@@ -29,10 +29,10 @@ type Server interface {
 
 type server struct {
 	*http.Server
-	logger interfaces.Logger
+	logger appinterfaces.Logger
 }
 
-func New(options Options, logger interfaces.Logger) Server {
+func New(options Options, logger appinterfaces.Logger) Server {
 	serverHTTP := &http.Server{
 		Addr:              net.JoinHostPort(options.Host, options.Port),
 		ReadTimeout:       options.ReadTimeout,

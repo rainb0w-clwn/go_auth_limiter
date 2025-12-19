@@ -1,4 +1,4 @@
-package interfaces
+package appinterfaces
 
 type Application interface {
 	LimitCheck(ip, login, password string) (bool, error)
