@@ -1,17 +1,54 @@
 ![GitHub CI](https://github.com/rainb0w-clwn/go_auth_limiter/actions/workflows/ci.yml/badge.svg)
 # Сервис "Анти-брутфорс"
 
-## [ТЗ](./docs/TASK.md)
 
-## Общее описание
+## Запуск
 
-Сервис предназначен для борьбы с подбором паролей при авторизации в какой-либо системе.
+```bash
+make run
+ ```
 
-Сервис вызывается перед авторизацией пользователя и может либо разрешить, либо заблокировать попытку.
+## CLI
 
-Предполагается, что сервис используется только для server-server, т.е. скрыт от конечного пользователя.
+1. Очистить бакет
+```bash
+ make run-cli ARGS="reset_bucket email@x.com 192.168.0.1"
+ ```
 
-## Развертывание
-* clone/download repo
-* init config ($cp configs/config.example.yml configs/config.yml)
-* run service ($make up)
+2. Добавить подсеть в черный список
+```bash
+ make run-cli ARGS="add_cidr_to_black_list 192.168.1.1/24" 
+ ```
+
+3. Добавить подсеть в белый список
+```bash
+ make run-cli ARGS="add_cidr_to_white_list 192.168.1.0/24" 
+ ```
+
+4. Удалить подсеть из черного списка
+```bash
+ make run-cli ARGS="delete_cidr_from_black_list 192.168.1.1/24" 
+ ```
+
+5. Удалить подсеть из белого списка
+```bash
+ make run-cli ARGS="delete_cidr_from_white_list 192.168.1.0/24" 
+ ```
+
+## API
+
+- [GRPC](./proto/limiter/AuthLimiter.proto) 
+
+- [HTTP](./proto/limiter/AuthLimiter.openapi.yaml)
+
+## Тесты
+
+1. UNIT-Тесты
+```bash
+make test
+ ```
+
+2. Интеграционные тесты
+```bash
+make integration-test
+ ```

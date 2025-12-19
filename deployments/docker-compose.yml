@@ -24,6 +24,19 @@ services:
     ports:
       - "8888:8888"
       - "50051:50051"
+  cli:
+    container_name: auth_limiter_cli
+    build:
+      context: ../
+      dockerfile: ./build/limiter_cli/Dockerfile
+    depends_on:
+      - app
+    environment:
+      GRPC_HOST: app
+      GRPC_PORT: 50051
+    entrypoint: ["/app/cli"]
+    stdin_open: true
+    tty: true
   db:
     image: postgres
     container_name: auth_limiter-db

@@ -18,11 +18,14 @@ tools:
 build:
 	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" ./cmd/limiter
 
-run: build
+start: build
 	$(BIN) -config $(CONFIG_PATH)
 
-up:
+run:
 	docker compose -f $(COMPOSE_FILE) up --build
+
+run-cli:
+	docker compose -f $(COMPOSE_FILE) run --rm cli $(ARGS)
 
 down:
 	docker compose -f $(COMPOSE_FILE) down

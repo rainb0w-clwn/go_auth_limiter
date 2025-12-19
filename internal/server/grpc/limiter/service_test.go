@@ -1,4 +1,4 @@
-package server_test
+package limiter_test
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	mocks "github.com/rainb0w-clwn/go_auth_limiter/internal/interfaces/mocks"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/limiter"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/rule"
-	server "github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc"
+	grpclimiter "github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc/limiter"
 	proto "github.com/rainb0w-clwn/go_auth_limiter/proto/limiter"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -21,7 +21,7 @@ func TestService_WhiteListAdd(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешный вызов
 	app.On("WhiteListAdd", "1.2.3.4").Return(nil)
@@ -51,7 +51,7 @@ func TestService_WhiteListDelete(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешное удаление
 	app.On("WhiteListDelete", "1.2.3.4").Return(nil)
@@ -79,7 +79,7 @@ func TestService_BlackListAdd(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешный вызов
 	app.On("BlackListAdd", "1.2.3.4").Return(nil)
@@ -109,7 +109,7 @@ func TestService_BlackListDelete(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешное удаление
 	app.On("BlackListDelete", "1.2.3.4").Return(nil)
@@ -136,7 +136,7 @@ func TestService_LimitCheck(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешная проверка лимита
 	app.On("LimitCheck", "1.2.3.4", "user", "pass").Return(true, nil)
@@ -166,7 +166,7 @@ func TestService_BucketReset(t *testing.T) {
 	ctx := context.Background()
 	app := new(mocks.MockApplication)
 	logger := new(mocks.MockLogger)
-	s := server.NewService(app, logger)
+	s := grpclimiter.NewService(app, logger)
 
 	// успешный сброс
 	app.On("LimitReset", "1.2.3.4", "user").Return(nil)

@@ -7,6 +7,7 @@ import (
 
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/config"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/interfaces"
+	grpclimiter "github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc/limiter"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc/log"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc/requestid"
 	"github.com/rainb0w-clwn/go_auth_limiter/internal/server/grpc/validate"
@@ -38,7 +39,7 @@ func New(options Options, logger interfaces.Logger, app interfaces.Application) 
 			log.New(logger),
 		),
 	)
-	proto.RegisterAuthLimiterServer(serverGRPC, NewService(app, logger))
+	proto.RegisterAuthLimiterServer(serverGRPC, grpclimiter.NewService(app, logger))
 	return &server{serverGRPC, logger}
 }
 

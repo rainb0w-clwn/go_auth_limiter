@@ -86,7 +86,7 @@ CLI может работать через GRPC/HTTP интерфейс.
 
 ## Разбалловка
 Максимум - **15 баллов**
-(при условии выполнения [обязательных требований](./README.md)):
+(при условии выполнения [обязательных требований](https://github.com/OtusGolang/final_project/blob/master/01-anti-bruteforce.md)):
 
 * Реализован алгоритм rate limit - 2 балла.
 * Реализованы фичи whitelist/blacklist - 2 балла.
